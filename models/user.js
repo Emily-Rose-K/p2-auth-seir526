@@ -63,9 +63,6 @@ module.exports = function(sequelize, DataTypes) {
         delete userData.password;
         return userData;
     }
+    return user;
 };
-// take inputed pw and compare to hashed pw in user table
-// or hash new pw to add to user table
 
-// remove password setup before add
-// return user model
