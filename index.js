@@ -12,18 +12,19 @@ app.use(Express.static(__dirname + '/public'));
 // set app ejsLayouts for render
 app.set('view engine', 'ejs');
 app.use(ejsLayouts);
-app.use(require('morgan')('dev'))
+app.use(require('morgan')('dev'));
 // require all middleware for app/authentication
 // helmet, morgan, passport, and custom middleware, express-sessions, sequelize sessions, flash
 const helmet = require('helmet');
 const session = require('express-session');
 const flash = require('flash');
-const passport = require('./config/ppConfig')
+const passport = require('./config/ppConfig');
 const db = require('./models');
 const { Store } = require('express-session');
+const isLoggedIn = require('./middleware/isLoggedIn');
 app.use(helmet());
 // want add a link to our customer middleware for isLoggedIn
-const SequilizeStore = require('connect-session-sequelize')(session.Store)
+const SequilizeStore = require('connect-session-sequelize')(session.Store);
 
 // create new instance of class Sequilize Store
 const sessionStore = new SequelizeStore({
@@ -48,6 +49,8 @@ app.use(flash());
 app.use(function(req, res, next) {
     res.locals.alert = req.flash();
     res.locals.currentUser = req.user;
+
+    next();
 })
 
 
@@ -56,6 +59,10 @@ app.use(function(req, res, next) {
 app.get('/', function(req, res) {
     // check to see if user is logged in
     res.render('index');
+})
+
+app.get('/profile', isLoggedIn, function(req, res) {
+    res.render('profile')
 })
 
 // include auth controller
