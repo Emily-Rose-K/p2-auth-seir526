@@ -6,8 +6,7 @@ const router = express.Router();
 const db = require('../models');
 // import middleware
 const flash = require('flash')
-// TODO: update require below to passport config file path
-const passport;
+const passport = require('..config/ppConfig');
 
 // register get route
 router.get('/register', function(req, res) {
