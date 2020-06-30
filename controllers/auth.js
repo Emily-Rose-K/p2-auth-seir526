@@ -40,8 +40,8 @@ router.post('/register', function(req, res) {
         console.log(`Looks like there was a problem.\n Message: ${err.message}. \n Please review - ${err}`)
         req.flash(`error`, err.message);
         res.redirect('auth/register');
-    })
-})
+    });
+});
 
 // login get route
 router.get('/login', function(req, res) {
@@ -49,26 +49,32 @@ router.get('/login', function(req, res) {
 })
 // login post route
 // TODO: pass next param to function
-router.post('/login', function(req, res) {
+router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(error, user, info) {
         // if no user authenticated
         if(!user) {
             req.flash('error', 'Invalid username or password. 🧞')
             // save to our user session no username
+            req.session.save(function(){
+                return res.redirect('auth/login');
+            });
             // redirect our user to try logging in again
         }
         if (error) {
-            // TODO: add next param from function
-            return error;
+            return next(error);
         }
-
         req.login(function(user, error) {
             // if error move to error
+            if (error) next(error);
             // if success flash success message
+            req.flash('success', 'You are now logged in.')
             // if success save session and redirect user 
-        })
-    })
-})
+            req.session.save(function() {
+                return res.redirect('/');
+            })
+        });
+    });
+});
 
 router.post('/login', passport.authenticate('local', {
     successRedirct: '/',
