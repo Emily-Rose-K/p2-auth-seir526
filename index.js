@@ -18,7 +18,37 @@ app.use(require('morgan')('dev'))
 const helmet = require('helmet');
 const session = require('express-session');
 const flash = require('flash');
+const passport = require('./config/ppConfig')
+const db = require('./models');
+const { Store } = require('express-session');
 app.use(helmet());
+// want add a link to our customer middleware for isLoggedIn
+const SequilizeStore = require('connect-session-sequelize')(session.Store)
+
+// create new instance of class Sequilize Store
+const sessionStore = new SequelizeStore({
+    db: db.sequelixe,
+    expiration: 1000 * 60 * 30
+})
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    session: sessionStore,
+    resave: false,
+    saveUninitialized: true
+}))
+
+sessionStore.sync();
+
+// initialize and link flash messages and passport and session
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+app.use(function(req, res, next) {
+    res.locals.alert = req.flash();
+    res.locals.currentUser = req.user;
+})
 
 
 // ROUTES
