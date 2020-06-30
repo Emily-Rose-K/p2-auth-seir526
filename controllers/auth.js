@@ -6,7 +6,7 @@ const router = express.Router();
 const db = require('../models');
 // import middleware
 const flash = require('flash')
-const passport = require('..config/ppConfig');
+const passport = require('../config/ppConfig');
 
 // register get route
 router.get('/register', function(req, res) {

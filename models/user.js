@@ -2,14 +2,14 @@
 // define use case
 //import any required libraries
 'use strict';
-const bcrypt = require('brypt')
+const bcrypt = require('bcrypt')
 // declare user model format
 module.exports = function(sequelize, DataTypes) {
     // define user object
     const user = sequelize.define('user', {
         // email
         email: {
-            type: DatayTypes.STRING,
+            type: DataTypes.STRING,
             validate: {
                 isEmail: {
                     msg: 'Invalid Email Address'
@@ -54,12 +54,12 @@ module.exports = function(sequelize, DataTypes) {
         // TODO: any user associations you want
     }
     // validPassword definition to validate password at user login
-    user.protoype.validPassword = function(passwordTyped)    {
+    user.prototype.validPassword = function(passwordTyped)    {
         return bycrypt.comparSync(passwordTyped, this.password);
     }
 
     // remove password before any serialization of User object
-    user.protoype.toJson = function() {
+    user.prototype.toJson = function() {
         delete userData.password;
         return userData;
     }
