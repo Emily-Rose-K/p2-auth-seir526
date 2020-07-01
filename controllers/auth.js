@@ -25,20 +25,23 @@ router.post('/register', function(req, res) {
         // if user was created
         if(created) {
             // authenticate user and start authorization process
-            console.log('User created! ⭐️')
-            res.redirect('/')
+            console.log('User created! ⭐️');
+            passport.authenticate('local', {
+                successRedirect: '/profile',
+                successFlash: 'Welcome to the shit show!'
+            }) (req, res);
         } else {
         // else if user is found
         console.log('User email already exists. 💥')
          // send error to user that eamil already exists
          req.flash('Uh-oh! That email is already in use. 📬')
         //redirect back to register get route
-        res.redirect('auth/register')
+        res.redirect('/auth/register')
         }     
     }).catch(function(err) {
         console.log(`Looks like there was a problem.\n Message: ${err.message}. \n Please review - ${err}`)
         req.flash(`error`, err.message);
-        res.redirect('auth/register');
+        res.redirect('/auth/register');
     });
 });
 
@@ -47,7 +50,6 @@ router.get('/login', function(req, res) {
     res.render('auth/login');
 })
 // login post route
-// TODO: pass next param to function
 router.post('/login', function(req, res, next) {
     passport.authenticate('local', function(error, user, info) {
         // if no user authenticated
@@ -55,14 +57,14 @@ router.post('/login', function(req, res, next) {
             req.flash('error', 'Invalid username or password. 🧞')
             // save to our user session no username
             req.session.save(function(){
-                return res.redirect('auth/login');
+                return res.redirect('/auth/login');
             });
             // redirect our user to try logging in again
         }
         if (error) {
             return next(error);
         }
-        req.login(function(user, error) {
+        req.login(user, function(error) {
             // if error move to error
             if (error) next(error);
             // if success flash success message
@@ -72,7 +74,7 @@ router.post('/login', function(req, res, next) {
                 return res.redirect('/');
             })
         });
-    });
+    })(req, res, next);
 });
 
 router.post('/login', passport.authenticate('local', {

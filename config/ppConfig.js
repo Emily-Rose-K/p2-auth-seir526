@@ -8,14 +8,12 @@ passport.serializeUser(function(user, cb) {
     cb(null, user.id)
 })
 
-
 // deserialized version
 passport.deserializeUser(function(id, cb) {
     db.user.findByPk(id).then(function(user) {
         cb(null, user);
     }).catch(cb);
 });
-
 
 // get this from the passport docs
 passport.use(new LocalStrategy({
@@ -32,9 +30,6 @@ passport.use(new LocalStrategy({
       }
     }).catch(cb);
   }));
-
-
-
 
 // export the Passport configuration from this module
 module.exports = passport;

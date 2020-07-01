@@ -40,9 +40,9 @@ module.exports = function(sequelize, DataTypes) {
         hooks: {
             // before new record
             beforeCreate: function(createdUser, options) {
-                if(createdUSer && createdUser.password) {
+                if(createdUser && createdUser.password) {
                      // hash password
-                    let hash = bcrypt.hashSync(createUser.password, 12)
+                    let hash = bcrypt.hashSync(createdUser.password, 12)
                     // return hashed password for new record
                     createdUser.password = hash;
                 }
@@ -55,7 +55,7 @@ module.exports = function(sequelize, DataTypes) {
     }
     // validPassword definition to validate password at user login
     user.prototype.validPassword = function(passwordTyped)    {
-        return bycrypt.comparSync(passwordTyped, this.password);
+        return bycrypt.compareSync(passwordTyped, this.password);
     }
 
     // remove password before any serialization of User object

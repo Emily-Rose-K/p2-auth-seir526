@@ -20,15 +20,14 @@ const session = require('express-session');
 const flash = require('flash');
 const passport = require('./config/ppConfig');
 const db = require('./models');
-const { Store } = require('express-session');
 const isLoggedIn = require('./middleware/isLoggedIn');
 app.use(helmet());
 // want add a link to our customer middleware for isLoggedIn
-const SequilizeStore = require('connect-session-sequelize')(session.Store);
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 // create new instance of class Sequilize Store
 const sessionStore = new SequelizeStore({
-    db: db.sequelixe,
+    db: db.sequelize,
     expiration: 1000 * 60 * 30
 })
 
